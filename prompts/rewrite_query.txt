@@ -1,0 +1,62 @@
+You turn a researcher's plain-English question into arXiv search queries.
+
+arXiv's search is keyword-based, not semantic, and it matches only TITLES and
+ABSTRACTS -- never the body of the paper. Your job is to guess the words the
+authors themselves put in their abstract.
+
+THE RULE THAT MATTERS MOST:
+No single term may appear in every query. If all your queries require the word
+"contrastive", a paper whose abstract never uses that word can never be found --
+however relevant it is. Each query must be able to succeed where the others fail.
+
+Rules:
+1. Produce exactly 3 queries. They must be genuinely different strategies, not
+   three phrasings of one idea:
+   - Q1 PRECISE: the field's current technical vocabulary, `abs:` restricted.
+   - Q2 MECHANISM: describe what the method DOES, in plainer words, avoiding the
+     field's named jargon entirely. Seminal papers predate the terminology later
+     coined for them -- their abstracts describe the mechanism, not the label.
+     (CLIP's abstract says "predicting which caption goes with which image".
+     It never says "contrastive". A jargon-only search cannot find it.)
+   - Q3 LANDMARK: if the field has well-known named models, methods, datasets or
+     benchmarks, search those names with `all:` or `ti:`. If none exist, make Q3
+     a broad `all:` query with at most two required terms.
+2. Use arXiv field prefixes: `abs:` (abstract), `ti:` (title), `all:` (all
+   metadata). Combine with AND / OR. Quote multi-word phrases.
+   CRITICAL: `all:` searches TITLE + ABSTRACT + metadata only -- NEVER the body
+   of the paper. A model's popular nickname is often absent from both: the CLIP
+   paper is titled "Learning Transferable Visual Models From Natural Language
+   Supervision" and its abstract never says "CLIP". So searching a nickname alone
+   cannot find the paper that introduced it. Always pair a nickname with the
+   descriptive phrase the authors would have used in their own title.
+   Search `ti:` as well as `abs:` -- a paper's central claim is usually in its
+   title, and phrases often appear there and nowhere in the abstract.
+3. Prefer short word STEMS over inflected forms and long exact phrases.
+   "caption" matches captions/captioning; "captioning" does not match "caption".
+   Every extra word in a quoted phrase is another way to miss.
+4. Keep each query to at most 2-3 AND-ed requirements. Every extra AND is another
+   chance to exclude the right paper. Prefer OR-ed alternatives inside one clause.
+5. Anchor the DOMAIN in at least Q1 and Q2 (e.g. `abs:(image OR visual)`),
+   otherwise a query about images will return audio and biosignal papers.
+6. If the question COMPARES two things (X vs Y, "how does X compare to Y",
+   "is X better than Y"), at least one query MUST require both sides together --
+   e.g. `abs:(diffusion) AND abs:(GAN OR adversarial)`. A query naming only one
+   side returns papers about that side alone, which cannot answer a comparison.
+   Papers that compare X and Y almost always name both in the title or abstract.
+7. No date or author filters.
+
+Examples:
+
+Question: How does contrastive pre-training affect zero-shot image classification?
+{{"queries": ["abs:(\"contrastive learning\" OR \"contrastive pre-training\") AND abs:\"zero-shot\" AND abs:(image OR visual)", "abs:(\"natural language supervision\" OR \"image-text pairs\" OR \"caption\") AND abs:(\"zero-shot\" OR \"transfer to downstream\")", "(ti:(\"natural language supervision\" OR \"image-text\") OR all:(CLIP OR ALIGN)) AND all:\"zero-shot\""]}}
+
+Question: Does sleep deprivation affect memory consolidation?
+{{"queries": ["abs:\"sleep deprivation\" AND abs:\"memory consolidation\"", "abs:(\"sleep loss\" OR \"restricted sleep\" OR \"wakefulness\") AND abs:(memory OR hippocampal)", "all:(\"sleep and memory\" OR \"sleep-dependent\")"]}}
+
+Question: How well do LLMs do at maths word problems?
+{{"queries": ["abs:(\"large language model\" OR LLM) AND abs:\"mathematical reasoning\"", "abs:(\"chain of thought\" OR \"step by step\") AND abs:(arithmetic OR \"word problem\")", "all:(GSM8K OR MATH OR \"math word problem\")"]}}
+
+QUESTION:
+{question}
+
+Respond with JSON only: {{"queries": ["...", "...", "..."]}}

@@ -1,0 +1,20 @@
+# Active set: 6 questions whose papers are already indexed (cheap to rerun)
+# plus 1 out-of-domain question to test the refusal path.
+# The 8 commented out below need new papers (~25 embed calls each) --
+# uncomment them when you have quota headroom.
+
+How do diffusion models compare to GANs for image generation?
+What causes catastrophic forgetting in continual learning?
+Do sparse mixture-of-experts models improve inference efficiency?
+How does chain-of-thought prompting affect reasoning accuracy in large language models?
+What is the effect of quantisation on large language model accuracy?
+How does retrieval-augmented generation reduce hallucination?
+# What are the trade-offs between LoRA and full fine-tuning?
+# How does batch normalisation affect training stability in deep networks?
+# What makes vision transformers data-hungry compared to convolutional networks?
+# How does contrastive learning produce useful representations without labels?
+# What limits the context length of transformer models?
+# How do graph neural networks handle over-smoothing?
+# Is federated learning effective when client data is non-IID?
+# How does speculative decoding speed up language model inference?
+What is the recommended first-line treatment for paediatric asthma?
