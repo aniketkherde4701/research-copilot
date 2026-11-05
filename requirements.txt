@@ -1,0 +1,19 @@
+# Core
+streamlit>=1.40
+python-dotenv>=1.0
+
+# LLM + embeddings
+google-genai>=1.0
+
+# Vector store
+pinecone>=7.0
+
+# Sources + parsing
+arxiv>=2.1
+pymupdf>=1.24
+
+# Numerics (semantic chunking breakpoints)
+numpy>=1.26
+
+# Tests
+pytest>=8.0

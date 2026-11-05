@@ -1,0 +1,33 @@
+# secrets -- never commit
+.env
+.streamlit/secrets.toml
+
+# python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+*.egg-info/
+
+# downloaded papers + question cache (regenerated on first run)
+cache/
+
+# keep the demo, ignore stray PDFs
+*.pdf
+!docs/*.pdf
+!tests/fixtures/*.pdf
+
+# os / editor
+.DS_Store
+.vscode/
+.idea/
+
+# working notes -- keep local, not for a public repo
+CONTEXT.md
+STUDY-PLAN.md
+PLAN.md
+eval/results.json
+
+# sandbox scratch
+_locks/
+docs/.gitkeep
