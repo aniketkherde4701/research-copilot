@@ -1,5 +1,5 @@
 # Core
-streamlit>=1.40
+streamlit>=1.42
 python-dotenv>=1.0
 
 # LLM + embeddings
