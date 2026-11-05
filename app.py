@@ -83,7 +83,7 @@ header[data-testid="stHeader"] { background: transparent; height: 0; }
 a { color: var(--accent); }
 
 /* top bar */
-.rc-topbar { display:flex; align-items:center; justify-content:space-between; margin: 0 0 .9rem; }
+.rc-topbar { display:flex; align-items:center; justify-content:space-between; margin: 0 0 .7rem; }
 .rc-brand { display:flex; align-items:center; gap:.65rem; }
 .rc-logo { width:34px; height:34px; border-radius:10px;
   background: linear-gradient(135deg,#5b7cfa,#9b6cf0); color:#fff;
@@ -176,7 +176,49 @@ a { color: var(--accent); }
 [data-testid="stExpander"] details { background:var(--panel-2); border-color:var(--line); border-radius:12px; }
 ::-webkit-scrollbar { width:8px; } ::-webkit-scrollbar-thumb { background:#3a3d42; border-radius:4px; }
 
-@media (max-width: 900px) { .block-container { padding: .7rem .6rem; } }
+/* ---- height: fit the viewport so the input box is always on screen ---- */
+.block-container { padding-top:.8rem !important; padding-bottom:0 !important; }
+/* Streamlit puts the fixed px height on the wrapper around each keyed container,
+   so both the wrapper and the container are resized. */
+:is(.st-key-panel_sources, .st-key-panel_chat, .st-key-panel_studio),
+[data-testid="stLayoutWrapper"]:has(> :is(.st-key-panel_sources, .st-key-panel_chat, .st-key-panel_studio)) {
+  height: calc(100dvh - 92px) !important; min-height: 440px; flex: 0 0 auto !important; }
+.st-key-chat_history,
+[data-testid="stLayoutWrapper"]:has(> .st-key-chat_history) {
+  height: calc(100dvh - 92px - 160px) !important; min-height: 240px; flex: 0 0 auto !important; }
+.st-key-hero { padding-top: clamp(1rem, 9dvh, 6rem); }
+@media (max-height: 700px) {
+  .rc-sub, .rc-steps, .rc-empty p { display:none; }
+  .rc-topbar { margin-bottom:.5rem; }
+}
+
+/* chat header with the New chat button */
+.st-key-chat_head { border-bottom:1px solid var(--line); padding-bottom:.35rem; margin-bottom:.3rem; }
+.st-key-chat_head .stButton button { padding:.2rem .7rem; min-height:0; }
+.st-key-chat_head [data-testid="stMarkdownContainer"] p {
+  margin:0 !important; font-weight:600; font-size:.95rem; color:var(--ink); line-height:31px; }
+.st-key-chat_head [data-testid="stHorizontalBlock"] { flex-wrap:nowrap !important; align-items:center; }
+.st-key-chat_head [data-testid="stColumn"]:last-child { flex:0 0 auto !important; width:auto !important; min-width:0 !important; }
+.st-key-chat_head [data-testid="stColumn"]:first-child { flex:1 1 auto !important; min-width:0 !important; }
+
+/* ---- narrow screens: stack the panels, chat first ---- */
+@media (max-width: 900px) {
+  .block-container { padding: .6rem .5rem 0 !important; }
+  .rc-pill, .rc-sub { display:none; }
+  .rc-topbar { margin-bottom:.5rem; }
+  /* keep citation chips and Save/Export side by side instead of one per row */
+  .st-key-panel_chat [data-testid="stHorizontalBlock"] { flex-direction:row !important; flex-wrap:wrap !important; gap:.4rem; }
+  .st-key-panel_chat [data-testid="stHorizontalBlock"] > [data-testid="stColumn"] {
+    flex:1 1 auto !important; width:auto !important; min-width:fit-content !important; }
+  .st-key-chat_history,
+  [data-testid="stLayoutWrapper"]:has(> .st-key-chat_history) { height: calc(100dvh - 66px - 165px) !important; }
+  [data-testid="stColumn"]:has(.st-key-panel_chat) { order:-1; }
+  .st-key-panel_chat,
+  [data-testid="stLayoutWrapper"]:has(> .st-key-panel_chat) { height: calc(100dvh - 66px) !important; flex: 0 0 auto !important; }
+  :is(.st-key-panel_sources, .st-key-panel_studio),
+  [data-testid="stLayoutWrapper"]:has(> :is(.st-key-panel_sources, .st-key-panel_studio)) {
+    height: auto !important; min-height: 0; max-height: 70dvh; }
+}
 </style>
 """
 
@@ -289,8 +331,9 @@ def render_sources() -> None:
         "Always search fresh", value=ss.force_search,
         help="Ignore remembered question → paper matches and search arXiv again.",
     )
-    if ss.messages and st.button("Clear notebook", icon=":material/delete_sweep:",
-                                 use_container_width=True):
+    if (ss.messages or ss.sources or ss.notes) and st.button(
+            "Reset notebook", icon=":material/delete_sweep:", use_container_width=True,
+            help="Remove the chat, all sources and all saved notes."):
         for key in ("messages", "sources", "considered", "notes", "active_source"):
             del ss[key]
         st.rerun()
@@ -424,6 +467,14 @@ def run_question(question: str, settings) -> None:
     st.rerun()   # redraw so the Sources and Studio panels pick up the new turn
 
 
+def new_chat() -> None:
+    """Start a fresh conversation. Sources and saved notes stay in the notebook."""
+    ss = st.session_state
+    ss.messages = []
+    ss.queued = None
+    st.rerun()
+
+
 def render_chat(settings) -> None:
     ss = st.session_state
 
@@ -433,8 +484,14 @@ def render_chat(settings) -> None:
         return
 
     # After it: a normal chat -- scrolling history, input pinned underneath.
-    st.markdown('<div class="rc-panel-head">Chat</div>', unsafe_allow_html=True)
-    history = st.container(height=PANEL_HEIGHT - 150, border=False)
+    with st.container(key="chat_head"):
+        title, action = st.columns([3, 1], vertical_alignment="center")
+        title.markdown("Chat")
+        if action.button("New chat", icon=":material/add_comment:", key="new_chat",
+                         use_container_width=True, disabled=bool(ss.queued)):
+            new_chat()
+    # height here is a fallback; CSS resizes it to fit the window
+    history = st.container(height=PANEL_HEIGHT - 150, border=False, key="chat_history")
     with history:
         for idx, msg in enumerate(ss.messages):
             if msg["role"] == "user":
