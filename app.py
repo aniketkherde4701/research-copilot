@@ -61,40 +61,41 @@ CSS = """
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
 :root {
-  --bg: #f3f5f9;
-  --panel: #ffffff;
-  --ink: #1f2430;
-  --muted: #667085;
-  --line: #e4e7ee;
-  --accent: #3a5ccc;
-  --accent-soft: #eaf0ff;
-  --chip: #f1f3f8;
+  --bg: #131314;
+  --panel: #1b1c1e;
+  --panel-2: #232427;
+  --ink: #e6e7ea;
+  --muted: #9aa0ab;
+  --line: #2e3034;
+  --accent: #8aa8ff;
+  --accent-soft: rgba(138, 168, 255, 0.13);
+  --chip: #2a2c30;
+  --bubble: #2c2e33;
 }
 
 html, body, [class*="css"], .stMarkdown, .stButton button, textarea, input {
   font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
 }
-.stApp { background: var(--bg); }
+.stApp { background: var(--bg); color: var(--ink); }
 header[data-testid="stHeader"] { background: transparent; height: 0; }
 #MainMenu, footer, [data-testid="stToolbar"] { visibility: hidden; }
 .block-container { padding: 1.1rem 1.4rem 0.6rem; max-width: 100%; }
+a { color: var(--accent); }
 
 /* top bar */
-.rc-topbar { display:flex; align-items:center; justify-content:space-between;
-  margin: 0 0 .9rem; }
+.rc-topbar { display:flex; align-items:center; justify-content:space-between; margin: 0 0 .9rem; }
 .rc-brand { display:flex; align-items:center; gap:.65rem; }
 .rc-logo { width:34px; height:34px; border-radius:10px;
-  background: linear-gradient(135deg,#3a5ccc,#7b5cd6); color:#fff;
+  background: linear-gradient(135deg,#5b7cfa,#9b6cf0); color:#fff;
   display:flex; align-items:center; justify-content:center; font-weight:700; }
 .rc-title { font-size:1.15rem; font-weight:600; color:var(--ink); line-height:1.1; }
 .rc-sub { font-size:.78rem; color:var(--muted); }
 .rc-pill { font-size:.72rem; padding:.25rem .6rem; border-radius:999px;
-  background:#fff4e0; color:#8a5a00; border:1px solid #f3dfb5; }
+  background:rgba(255,190,80,.10); color:#f0c36a; border:1px solid rgba(255,190,80,.25); }
 
 /* the three panels */
 .st-key-panel_sources, .st-key-panel_chat, .st-key-panel_studio {
-  background: var(--panel); border:1px solid var(--line) !important;
-  border-radius: 18px !important; }
+  background: var(--panel); border:1px solid var(--line) !important; border-radius: 18px !important; }
 .rc-panel-head { display:flex; justify-content:space-between; align-items:center;
   font-weight:600; font-size:.95rem; color:var(--ink);
   padding-bottom:.55rem; margin-bottom:.6rem; border-bottom:1px solid var(--line); }
@@ -105,26 +106,45 @@ header[data-testid="stHeader"] { background: transparent; height: 0; }
 
 /* source cards */
 .rc-src { border:1px solid var(--line); border-radius:12px; padding:.6rem .7rem;
-  margin-bottom:.45rem; background:#fff; }
+  margin-bottom:.45rem; background:var(--panel-2); }
 .rc-src.active { border-color:var(--accent); background:var(--accent-soft); }
 .rc-src-title { font-size:.84rem; font-weight:600; color:var(--ink); line-height:1.3; }
 .rc-src-meta { font-size:.72rem; color:var(--muted); margin-top:.2rem; }
 .rc-src-meta a { color:var(--accent); text-decoration:none; }
-.rc-doc-icon { display:inline-block; font-size:.62rem; font-weight:700; color:#b42318;
-  background:#fee4e2; border-radius:4px; padding:0 .3rem; margin-right:.35rem; }
-.rc-mini { font-size:.78rem; color:var(--ink); padding:.3rem 0;
-  border-bottom:1px dashed var(--line); }
+.rc-doc-icon { display:inline-block; font-size:.62rem; font-weight:700; color:#ff8a80;
+  background:rgba(255,100,90,.15); border-radius:4px; padding:0 .3rem; margin-right:.35rem; }
+.rc-mini { font-size:.78rem; color:var(--ink); padding:.3rem 0; border-bottom:1px dashed var(--line); }
 .rc-mini a { color:var(--ink); text-decoration:none; }
 .rc-mini a:hover { color:var(--accent); }
 .rc-mini span { color:var(--muted); font-size:.7rem; }
 
-/* chat */
-.rc-empty { text-align:center; padding:2.2rem 1rem 1rem; }
-.rc-empty h2 { font-size:1.55rem; font-weight:600; color:var(--ink); margin:.4rem 0; }
-.rc-empty p { color:var(--muted); font-size:.9rem; max-width:520px; margin:0 auto; }
-.rc-steps { display:flex; gap:.5rem; justify-content:center; flex-wrap:wrap; margin:1.1rem 0 .4rem; }
-.rc-step { font-size:.74rem; background:var(--chip); color:var(--ink);
-  padding:.3rem .65rem; border-radius:999px; }
+/* chat: welcome (centered) state */
+.st-key-hero { padding-top: 7vh; max-width: 720px; margin: 0 auto; }
+.rc-empty { text-align:center; padding:0 1rem 1.1rem; }
+.rc-empty h2 { font-size:1.9rem; font-weight:600; margin:.2rem 0 .5rem;
+  background: linear-gradient(90deg,#8aa8ff,#c59bff); -webkit-background-clip:text;
+  background-clip:text; color:transparent; }
+.rc-empty p { color:var(--muted); font-size:.9rem; max-width:540px; margin:0 auto; }
+.rc-steps { display:flex; gap:.5rem; justify-content:center; flex-wrap:wrap; margin:1rem 0 .2rem; }
+.rc-step { font-size:.72rem; background:var(--chip); color:var(--muted); padding:.28rem .65rem; border-radius:999px; }
+.st-key-hero [data-testid="stChatInput"] { margin: .3rem 0 1rem; }
+.st-key-hero .stButton button { text-align:left; justify-content:flex-start; min-height:64px;
+  background:var(--panel-2); }
+
+/* chat: conversation state */
+[data-testid="stChatMessage"] { background:transparent; padding:.5rem 0; gap:.75rem; }
+[data-testid="stChatMessage"]:has([data-testid="stChatMessageAvatarUser"]) { justify-content:flex-end; }
+[data-testid="stChatMessage"]:has([data-testid="stChatMessageAvatarUser"]) [data-testid="stChatMessageAvatarUser"] { display:none; }
+[data-testid="stChatMessage"]:has([data-testid="stChatMessageAvatarUser"]) [data-testid="stChatMessageContent"] {
+  flex: 0 1 auto; max-width:78%; margin-left:auto !important; margin-right:0 !important; background:var(--bubble); color:var(--ink);
+  padding:.7rem 1.05rem !important; border-radius:20px 20px 6px 20px; overflow:visible; }
+[data-testid="stChatMessage"]:has([data-testid="stChatMessageAvatarUser"]) [data-testid="stChatMessageContent"] * { margin-bottom:0 !important; }
+[data-testid="stChatMessage"]:has([data-testid="stChatMessageAvatarUser"]) [data-testid="stChatMessageContent"] p { margin:0; }
+[data-testid="stChatMessageAvatarCustom"], [data-testid="stChatMessageAvatarAssistant"] {
+  background: linear-gradient(135deg,#5b7cfa,#9b6cf0) !important; color:#fff !important; border-radius:50% !important; }
+[data-testid="stChatInput"] { border-radius:24px !important; background:var(--panel-2) !important;
+  border:1px solid var(--line) !important; }
+[data-testid="stChatInput"] textarea { color:var(--ink) !important; }
 .rc-paperchip { display:inline-flex; align-items:center; gap:.35rem; font-size:.76rem;
   background:var(--accent-soft); color:var(--accent); padding:.25rem .65rem;
   border-radius:999px; margin-bottom:.5rem; font-weight:500; }
@@ -132,33 +152,31 @@ header[data-testid="stHeader"] { background: transparent; height: 0; }
 .rc-why { font-size:.78rem; color:var(--muted); border-left:3px solid var(--line);
   padding-left:.6rem; margin:.2rem 0 .7rem; }
 .rc-meta { font-size:.72rem; color:var(--muted); margin-top:.4rem; }
-[data-testid="stChatMessage"] { background:transparent; padding:.4rem 0; }
-.stChatInput, [data-testid="stChatInput"] textarea { border-radius:16px; }
 
 /* studio */
 .rc-card { border:1px solid var(--line); border-radius:12px; padding:.7rem .8rem;
-  margin-bottom:.55rem; background:#fff; }
+  margin-bottom:.55rem; background:var(--panel-2); }
 .rc-card-title { font-weight:600; font-size:.84rem; color:var(--ink); margin-bottom:.25rem; }
-.rc-card-body { font-size:.8rem; color:#344054; line-height:1.45; }
+.rc-card-body { font-size:.8rem; color:#c4c7cf; line-height:1.45; }
 .rc-cite-head { font-size:.76rem; font-weight:600; color:var(--accent); }
-.rc-bar-row { display:flex; align-items:center; gap:.5rem; font-size:.74rem;
-  color:var(--ink); margin:.28rem 0; }
+.rc-bar-row { display:flex; align-items:center; gap:.5rem; font-size:.74rem; color:var(--ink); margin:.28rem 0; }
 .rc-bar-label { width:110px; flex-shrink:0; color:var(--muted); }
 .rc-track { flex:1; height:8px; border-radius:4px; background:var(--chip); }
-.rc-bar { height:8px; border-radius:4px; background:linear-gradient(90deg,#3a5ccc,#7b5cd6); }
+.rc-bar { height:8px; border-radius:4px; background:linear-gradient(90deg,#5b7cfa,#9b6cf0); }
 .rc-bar-val { width:48px; text-align:right; font-variant-numeric:tabular-nums; }
 .rc-stat-grid { display:grid; grid-template-columns:1fr 1fr; gap:.45rem; margin-bottom:.6rem; }
 .rc-stat { background:var(--chip); border-radius:10px; padding:.5rem .6rem; }
 .rc-stat b { display:block; font-size:1.05rem; color:var(--ink); }
 .rc-stat span { font-size:.68rem; color:var(--muted); text-transform:uppercase; letter-spacing:.04em; }
 
-.stButton button { border-radius:12px; border:1px solid var(--line); font-size:.8rem; }
-.stButton button[kind="primary"] { background:var(--accent); border-color:var(--accent); }
+.stButton button, .stDownloadButton button, .stLinkButton a, [data-testid="stPopover"] button {
+  border-radius:12px; border:1px solid var(--line); font-size:.8rem; background:var(--panel-2); color:var(--ink); }
+.stButton button:hover, .stDownloadButton button:hover { border-color:var(--accent); color:var(--accent); }
 .stTabs [data-baseweb="tab"] { font-size:.8rem; padding:.3rem .55rem; }
+[data-testid="stExpander"] details { background:var(--panel-2); border-color:var(--line); border-radius:12px; }
+::-webkit-scrollbar { width:8px; } ::-webkit-scrollbar-thumb { background:#3a3d42; border-radius:4px; }
 
-@media (max-width: 900px) {
-  .block-container { padding: .7rem .6rem; }
-}
+@media (max-width: 900px) { .block-container { padding: .7rem .6rem; } }
 </style>
 """
 
@@ -321,31 +339,37 @@ def render_answer(report: Report, idx: int) -> None:
     st.markdown(f'<div class="rc-meta">{meta}</div>', unsafe_allow_html=True)
 
 
-def render_empty_state() -> None:
-    st.markdown(
-        """
-        <div class="rc-empty">
-          <div style="font-size:2.2rem">📚</div>
-          <h2>What do you want to research?</h2>
-          <p>Ask in plain language. The agent rewrites it into arXiv searches, picks
-             the single best paper, reads it, and answers only from what it says —
-             with numbered citations you can check.</p>
-          <div class="rc-steps">
-            <span class="rc-step">1 · Search</span><span class="rc-step">2 · Select</span>
-            <span class="rc-step">3 · Read</span><span class="rc-step">4 · Retrieve</span>
-            <span class="rc-step">5 · Cite</span>
-          </div>
-        </div>
-        """,
-        unsafe_allow_html=True,
-    )
-    cols = st.columns(2)
-    for i, (label, question) in enumerate(EXAMPLES):
-        with cols[i % 2]:
-            if st.button(f"**{label}**  \n{question}", key=f"ex_{i}",
-                         use_container_width=True):
-                st.session_state.queued = question
-                st.rerun()
+def render_welcome() -> None:
+    """First screen: greeting, the input box in the middle, suggestions under it."""
+    with st.container(key="hero"):
+        st.markdown(
+            """
+            <div class="rc-empty">
+              <h2>What do you want to research?</h2>
+              <p>Ask in plain language. The agent searches arXiv, picks the single best
+                 paper, reads it, and answers only from what it says &mdash; with numbered
+                 citations you can check.</p>
+              <div class="rc-steps">
+                <span class="rc-step">1 &middot; Search</span><span class="rc-step">2 &middot; Select</span>
+                <span class="rc-step">3 &middot; Read</span><span class="rc-step">4 &middot; Retrieve</span>
+                <span class="rc-step">5 &middot; Cite</span>
+              </div>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+        prompt = st.chat_input("Ask a research question…", key="hero_input")
+        if prompt and prompt.strip():
+            st.session_state.queued = prompt.strip()
+            st.rerun()
+
+        cols = st.columns(2)
+        for i, (label, question) in enumerate(EXAMPLES):
+            with cols[i % 2]:
+                if st.button(f"**{label}**  \n{question}", key=f"ex_{i}",
+                             use_container_width=True):
+                    st.session_state.queued = question
+                    st.rerun()
 
 
 def run_question(question: str, settings) -> None:
@@ -402,12 +426,16 @@ def run_question(question: str, settings) -> None:
 
 def render_chat(settings) -> None:
     ss = st.session_state
-    st.markdown('<div class="rc-panel-head">Chat</div>', unsafe_allow_html=True)
 
+    # Before the first question: input sits in the middle of the panel.
+    if not ss.messages and not ss.queued:
+        render_welcome()
+        return
+
+    # After it: a normal chat -- scrolling history, input pinned underneath.
+    st.markdown('<div class="rc-panel-head">Chat</div>', unsafe_allow_html=True)
     history = st.container(height=PANEL_HEIGHT - 150, border=False)
     with history:
-        if not ss.messages and not ss.queued:
-            render_empty_state()
         for idx, msg in enumerate(ss.messages):
             if msg["role"] == "user":
                 with st.chat_message("user"):
@@ -419,7 +447,7 @@ def render_chat(settings) -> None:
                     else:
                         render_answer(msg["report"], idx)
 
-    prompt = st.chat_input("Ask a research question…")
+    prompt = st.chat_input("Ask a follow-up or a new question…", key="chat_input")
     question = (prompt or ss.queued or "").strip()
     if question:
         ss.queued = None
